@@ -6,6 +6,7 @@ app.listen(port, () => {
     console.log(`Server is up and running on port ${port}`);
 });
 
-app.get('/', (request, response) => {
-    response.send('wszystko ok');
+app.get('/', (req, res) => {
+    console.log(__dirname);
+    res.sendFile(__dirname + '/index.html')
 });
