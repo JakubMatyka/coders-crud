@@ -1,5 +1,4 @@
-// 1. Get titles from database
-// 2. Use some template engine for displaying titles
+// 1. Use template engine to generate html with data
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,6 +10,9 @@ const app = express();
 const port = 3000;
 
 const url = 'mongodb://kmatyka:qlop01lwe@ds145790.mlab.com:45790/book';
+
+// use Embedded JS
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({
   encode: true,
@@ -29,11 +31,11 @@ MongoClient.connect(url, (err, res) => {
 });
 
 app.get('/', (req, res) => {
-  //cursor object contains all titles from database.
-  const cursor = db.collection('books')
-    .find();
-
-  res.sendFile(__dirname + '/index.html')
+  // The toArray method takes in a callback function and allow to manipulate data
+  db.collection('books').find().toArray((err, result) => {
+    // view is a view from folder views
+    res.render('index.ejs', {titles: result})
+  });
 });
 
 app.post('/book', (req, res) => {
