@@ -37,7 +37,7 @@ app.post('/book', (req, res) => {
   book.description = req.body.description;
 
   db.collection('books')
-    .save(book, (err, res) => {
+    .save(book, (err, result) => {
       if (err) {
         return console.info(err);
       }
