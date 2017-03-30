@@ -4,13 +4,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-//console.count();
-
-app.use(bodyParser.urlencoded({encode: true}));
-
-app.listen(port, () => {
-    console.log(`Server is up and running on port ${port}`);
-});
+app.use(bodyParser.urlencoded({
+  encode: true,
+  extended: true
+}));
 
 app.get('/', (req, res) => {
     console.log(__dirname);
@@ -19,4 +16,8 @@ app.get('/', (req, res) => {
 
 app.post('/titles', (req, res) => {
     console.log('Wait for titles');
+});
+
+app.listen(port, () => {
+  console.log(`Server is up and running on port ${port}`);
 });
