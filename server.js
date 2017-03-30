@@ -1,3 +1,6 @@
+// 1. Get titles from database
+// 2. Use some template engine for displaying titles
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
@@ -26,7 +29,10 @@ MongoClient.connect(url, (err, res) => {
 });
 
 app.get('/', (req, res) => {
-  console.info(__dirname);
+  //cursor object contains all titles from database.
+  const cursor = db.collection('books')
+    .find();
+
   res.sendFile(__dirname + '/index.html')
 });
 
