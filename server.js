@@ -1,4 +1,4 @@
-// 1. Use template engine to generate html with data
+// 1. Modify data by update
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,16 +8,20 @@ let db;
 
 const app = express();
 const port = 3000;
+const url = 'mongodb://kmatyka:qlop01lwe@ds147080.mlab.com:47080/somsome';
 
-const url = 'mongodb://kmatyka:qlop01lwe@ds145790.mlab.com:45790/book';
-
-// use Embedded JS
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({
   encode: true,
   extended: true
 }));
+
+// Make public folder accessible to all components
+app.use(express.static(__dirname + '/public'));
+
+// Make server able to read JSON files
+app.use(bodyParser.json());
 
 MongoClient.connect(url, (err, res) => {
   if (err) {
@@ -31,9 +35,7 @@ MongoClient.connect(url, (err, res) => {
 });
 
 app.get('/', (req, res) => {
-  // The toArray method takes in a callback function and allow to manipulate data
   db.collection('books').find().toArray((err, result) => {
-    // view is a view from folder views
     res.render('index.ejs', {titles: result})
   });
 });
@@ -53,4 +55,21 @@ app.post('/book', (req, res) => {
       console.info('saved to database');
       res.redirect('/');
     })
+});
+
+// find last title and change it
+app.put('/book' , (req, res) => {
+  db.collection('books')
+    .findOneAndUpdate({description: 'Baba'},{
+        $set: {
+          title: req.body.title,
+          description: req.body.description
+        }
+      },{
+        sort: {_id: 1},
+        upsert: true
+      }, (err, result) => {
+        if (err) return res.send(err);
+        res.send(result)
+      })
 });
