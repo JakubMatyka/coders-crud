@@ -57,7 +57,6 @@ app.post('/book', (req, res) => {
     })
 });
 
-// find last title and change it
 app.put('/book' , (req, res) => {
   db.collection('books')
     .findOneAndUpdate({description: 'Baba'},{
@@ -66,10 +65,18 @@ app.put('/book' , (req, res) => {
           description: req.body.description
         }
       },{
-        sort: {_id: 1},
+        // search from the newest
+        sort: {_id: -1},
         upsert: true
       }, (err, result) => {
         if (err) return res.send(err);
         res.send(result)
       })
+});
+
+app.delete('/book' , (req, res) => {
+  db.collection('books').findOneAndDelete({title: req.body.title}, (err, result) => {
+    if (err) return res.send(500, err)
+    res.send('No funk!')
+  })
 });
