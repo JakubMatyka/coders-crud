@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const BookSchema = require('./bookSchema');
 
 const app = express();
 const port = 3000;
@@ -12,7 +13,7 @@ let db;
 
 app.use(bodyParser.urlencoded({encode: true, extended: true}));
 
-MongoClient.connect('mongodb://kmatyka:qlop01lwe@ds145790.mlab.com:45790/book', (err, res) => {
+MongoClient.connect('mongodb://kmatyka:qlop01lwe@ds147920.mlab.com:47920/book', (err, res) => {
   if(err) {
     return console.error(err);
   }
@@ -28,8 +29,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/titles', (req, res) => {
+  const book = new BookSchema;
+  book.title = req.body.title;
+  book.description = req.body.description;
+  
   db.collection('titles')
-    .save(req.body, (err, result) => {
+    .save(book, (err, result) => {
       if (err) {
         return console.log(err)
       }
